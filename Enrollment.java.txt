@@ -1,0 +1,13 @@
+public class Enrollment {
+    Student student;
+    Course course;
+    Payment payment;
+
+    Enrollment(Student student, Course course,
+               Payment payment) {
+
+        this.student = student;
+        this.course = course;
+        this.payment = payment;
+    }
+}

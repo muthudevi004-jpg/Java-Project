@@ -1,0 +1,25 @@
+public class Course {
+    int id;
+    String name;
+    double fee;
+    int capacity;
+    Instructor instructor;
+
+    Course(int id, String name, double fee,
+           int capacity, Instructor instructor) {
+
+        this.id = id;
+        this.name = name;
+        this.fee = fee;
+        this.capacity = capacity;
+        this.instructor = instructor;
+    }
+
+    void display() {
+        System.out.println("Course ID: " + id);
+        System.out.println("Course Name: " + name);
+        System.out.println("Fee: " + fee);
+        System.out.println("Available Seats: " + capacity);
+        System.out.println("Instructor: " + instructor.name);
+    }
+}

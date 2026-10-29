@@ -1,0 +1,11 @@
+public class PremiumStudent extends Student {
+
+    PremiumStudent(int id, String name) {
+        super(id, name);
+    }
+
+    @Override
+    double getDiscount() {
+        return 0.20;
+    }
+}

@@ -1,0 +1,9 @@
+public class Payment {
+    double amount;
+    boolean paid;
+
+    Payment(double amount) {
+        this.amount = amount;
+        this.paid = true;
+    }
+}

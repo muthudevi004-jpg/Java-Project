@@ -1,0 +1,245 @@
+import java.util.*;
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+
+    static ArrayList<Course> courses = new ArrayList<>();
+    static ArrayList<Student> students = new ArrayList<>();
+    static ArrayList<Enrollment> enrollments = new ArrayList<>();
+    static ArrayList<Receipt> receipts = new ArrayList<>();
+
+    static Course findCourse(int id) {
+        for (Course c : courses) {
+            if (c.id == id)
+                return c;
+        }
+        return null;
+    }
+
+    static Student findStudent(int id) {
+        for (Student s : students) {
+            if (s.id == id)
+                return s;
+        }
+        return null;
+    }
+
+    static void addCourse() {
+
+        System.out.print("Enter Course ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        if (findCourse(id) != null) {
+            System.out.println("Course already exists");
+            return;
+        }
+
+        System.out.print("Enter Course Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Fee: ");
+        double fee = sc.nextDouble();
+
+        System.out.print("Enter Capacity: ");
+        int capacity = sc.nextInt();
+
+        if (fee < 0 || capacity <= 0) {
+            System.out.println("Invalid fee or capacity");
+            return;
+        }
+
+        System.out.print("Enter Instructor ID: ");
+        int iid = sc.nextInt();
+        sc.nextLine();
+
+        System.out.print("Enter Instructor Name: ");
+        String iname = sc.nextLine();
+
+        Instructor instructor = new Instructor(iid, iname);
+
+        courses.add(new Course(
+                id, name, fee, capacity, instructor));
+
+        System.out.println("Course Added Successfully");
+    }
+
+    static void addStudent() {
+
+        System.out.print("Enter Student ID: ");
+        int id = sc.nextInt();
+        sc.nextLine();
+
+        if (findStudent(id) != null) {
+            System.out.println("Student already exists");
+            return;
+        }
+
+        System.out.print("Enter Student Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Premium Student (yes/no): ");
+        String type = sc.nextLine();
+
+        if (type.equalsIgnoreCase("yes")) {
+            students.add(new PremiumStudent(id, name));
+        } else {
+            students.add(new Student(id, name));
+        }
+
+        System.out.println("Student Added Successfully");
+    }
+
+    static void enrollStudent() {
+
+        System.out.print("Enter Student ID: ");
+        int sid = sc.nextInt();
+
+        System.out.print("Enter Course ID: ");
+        int cid = sc.nextInt();
+
+        Student student = findStudent(sid);
+        Course course = findCourse(cid);
+
+        if (student == null || course == null) {
+            System.out.println("Invalid Student or Course");
+            return;
+        }
+
+        if (course.capacity <= 0) {
+            System.out.println("No seats available");
+            return;
+        }
+
+        for (Enrollment e : enrollments) {
+            if (e.student.id == sid && e.course.id == cid) {
+                System.out.println("Already enrolled");
+                return;
+            }
+        }
+
+        double discount = course.fee * student.getDiscount();
+        double amount = course.fee - discount;
+
+        System.out.println("Course Fee: " + course.fee);
+        System.out.println("Discount: " + discount);
+        System.out.println("Payable Amount: " + amount);
+
+        System.out.print("Confirm Payment (yes/no): ");
+        String choice = sc.next();
+
+        if (!choice.equalsIgnoreCase("yes")) {
+            System.out.println("Payment Cancelled");
+            return;
+        }
+
+        Payment payment = new Payment(amount);
+
+        Enrollment enrollment =
+                new Enrollment(student, course, payment);
+
+        enrollments.add(enrollment);
+        course.capacity--;
+
+        Receipt receipt = new Receipt(enrollment);
+        receipts.add(receipt);
+
+        System.out.println("Enrollment Successful");
+        receipt.display();
+    }
+
+    static void displayCourses() {
+
+        if (courses.isEmpty()) {
+            System.out.println("No Courses Available");
+            return;
+        }
+
+        for (Course c : courses) {
+            c.display();
+            System.out.println("--------------------");
+        }
+    }
+
+    static void displayEnrollments() {
+
+        if (enrollments.isEmpty()) {
+            System.out.println("No Enrollments");
+            return;
+        }
+
+        for (Enrollment e : enrollments) {
+            System.out.println(
+                    e.student.name + " enrolled in " + e.course.name);
+        }
+    }
+
+    static void displayReceipts() {
+
+        if (receipts.isEmpty()) {
+            System.out.println("No Receipts");
+            return;
+        }
+
+        for (Receipt r : receipts) {
+            r.display();
+        }
+    }
+
+    public static void main(String[] args) {
+
+        int choice;
+
+        do {
+            System.out.println("\n===== COURSE ENROLLMENT =====");
+            System.out.println("1. Add Course");
+            System.out.println("2. Add Student");
+            System.out.println("3. Enroll Student / Make Payment");
+            System.out.println("4. Display Courses");
+            System.out.println("5. Display Enrollments");
+            System.out.println("6. Display Receipts");
+            System.out.println("7. Exit");
+
+            System.out.print("Enter Choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+
+                case 1:
+                    addCourse();
+                    break;
+
+                case 2:
+                    addStudent();
+                    break;
+
+                case 3:
+                    enrollStudent();
+                    break;
+
+                case 4:
+                    displayCourses();
+                    break;
+
+                case 5:
+                    displayEnrollments();
+                    break;
+
+                case 6:
+                    displayReceipts();
+                    break;
+
+                case 7:
+                    System.out.println("Thank You!");
+                    break;
+
+                default:
+                    System.out.println("Invalid Choice");
+            }
+
+        } while (choice != 7);
+
+        sc.close();
+    }
+}

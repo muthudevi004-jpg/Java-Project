@@ -1,0 +1,20 @@
+public class Receipt {
+    static int nextId = 1;
+
+    int receiptId;
+    Enrollment enrollment;
+
+    Receipt(Enrollment enrollment) {
+        receiptId = nextId++;
+        this.enrollment = enrollment;
+    }
+
+    void display() {
+        System.out.println("\n===== RECEIPT =====");
+        System.out.println("Receipt ID: " + receiptId);
+        System.out.println("Student: " + enrollment.student.name);
+        System.out.println("Course: " + enrollment.course.name);
+        System.out.println("Amount: " + enrollment.payment.amount);
+        System.out.println("Payment Successful");
+    }
+}
